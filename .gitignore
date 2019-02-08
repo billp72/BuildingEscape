@@ -10,3 +10,7 @@ BuildingEscape.VC.db/
 Content/StarterContent/
 .vs/
 
+#*.VC.db
+#*.VC.db-shm
+#*.VC.db-wal
+
