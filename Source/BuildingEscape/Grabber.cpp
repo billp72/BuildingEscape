@@ -14,15 +14,20 @@ UGrabber::UGrabber()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
-
 
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	FindPhysicsHandleComponent();
+	FindInputHandlerComponent();
+	
+}
+
+void UGrabber::FindPhysicsHandleComponent()
+{
 	///look for attached physics handle
 	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
 
@@ -32,19 +37,31 @@ void UGrabber::BeginPlay()
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Physics handle unable to attached: %s"), *GetOwner()->GetName());
 	}
+}
 
+void UGrabber::FindInputHandlerComponent() 
+{
 	///look for attached input component (visable only at runtime)
 	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
 
 	if (InputComponent) {
 
-		UE_LOG(LogTemp, Warning, TEXT("Input component found"));
+		InputComponent->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		InputComponent->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Cannot find input component for: %s"), *GetOwner()->GetName());
 	}
 }
 
+void UGrabber::Grab() {
+	UE_LOG(LogTemp, Warning, TEXT("You have grabbed something"));
+
+}
+
+void UGrabber::Release() {
+	UE_LOG(LogTemp, Warning, TEXT("You have released something"));
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -92,7 +109,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	AActor* ActorHit = Hit.GetActor();
 
 	if (ActorHit) {
-		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
+		//UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
 	}
 	
 
