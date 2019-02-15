@@ -46,7 +46,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	);*/
 
 	//Draw a red trace in the world to visualize
-	FVector LineTraceEnd = PlayerViewPointLocation + FVector(0.f, 0.f, 50.f);
+	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 
 	DrawDebugLine(
 		GetWorld(),
