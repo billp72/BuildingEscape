@@ -23,6 +23,26 @@ void UGrabber::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	///look for attached physics handle
+	PhysicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+
+	if (PhysicsHandle) {
+
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("Physics handle unable to attached: %s"), *GetOwner()->GetName());
+	}
+
+	///look for attached input component (visable only at runtime)
+	InputComponent = GetOwner()->FindComponentByClass<UInputComponent>();
+
+	if (InputComponent) {
+
+		UE_LOG(LogTemp, Warning, TEXT("Input component found"));
+	}
+	else {
+		UE_LOG(LogTemp, Error, TEXT("Cannot find input component for: %s"), *GetOwner()->GetName());
+	}
 }
 
 
@@ -45,7 +65,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		*PlayerViewPointRotation.ToString()
 	);*/
 
-	//Draw a red trace in the world to visualize
+	///Draw a red trace in the world to visualize
 	FVector LineTraceEnd = PlayerViewPointLocation + PlayerViewPointRotation.Vector() * Reach;
 
 	DrawDebugLine(
@@ -59,8 +79,24 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 		10.f
 	);
 
-	// Ray-cast out to reach distance
+	/// Ray-cast out to reach distance
+	FHitResult Hit;
+	FCollisionQueryParams TraceParams(FName(TEXT("")), false, GetOwner());
+	GetWorld()->LineTraceSingleByObjectType(
+		OUT Hit,
+		PlayerViewPointLocation,
+		LineTraceEnd,
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_PhysicsBody),
+		TraceParams
+	);
+	AActor* ActorHit = Hit.GetActor();
 
-	//
+	if (ActorHit) {
+		UE_LOG(LogTemp, Warning, TEXT("Line trace hit: %s"), *(ActorHit->GetName()));
+	}
+	
+
+
+	///three slashes stops commenting from appearing in hover
 }
 
