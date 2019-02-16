@@ -38,6 +38,18 @@ private:
 	//Call when grab is released
 	void Release();
 
+	//find (assumed) attached physics component
 	void FindPhysicsHandleComponent();
+
+	//find (assumed) attached input component
 	void FindInputHandlerComponent();
+
+	//return hit for first physics body in reach
+	const FHitResult GetFirstPhysicsBodyInReach();
+
+	//returns current start of reach line
+	FVector GetReachLineStart();
+
+	//returns current end of reach line
+	FVector GetReachLineEnd();
 };

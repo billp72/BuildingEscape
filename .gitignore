@@ -11,6 +11,7 @@ Content/StarterContent/Textures
 Content/StarterContent/HDRI
 .vs/
 
+*.sln
 #*.VC.db
 #*.VC.db-shm
 #*.VC.db-wal
