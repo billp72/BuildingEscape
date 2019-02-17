@@ -52,6 +52,7 @@ void UGrabber::FindInputHandlerComponent()
 
 void UGrabber::Grab() 
 {
+	if (!PhysicsHandle) { return; }
 	///line trace and see if we reach any body with physics channel set
 	auto HitResult = GetFirstPhysicsBodyInReach();
 	auto ComponentToGrab = HitResult.GetComponent();
@@ -69,6 +70,7 @@ void UGrabber::Grab()
 
 void UGrabber::Release() 
 {
+	if (!PhysicsHandle) { return; }
 	PhysicsHandle->ReleaseComponent();
 }
 
@@ -78,7 +80,7 @@ void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompone
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ... get a players viewpoint (every tick)
-
+	if (!PhysicsHandle) { return; }
 	//if the physics handle is attached
 	if (PhysicsHandle->GrabbedComponent) {
 		PhysicsHandle->SetTargetLocation(GetReachLineEnd());

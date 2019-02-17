@@ -21,8 +21,10 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
-
 	Owner = GetOwner();
+	if (!PressurePlate) { 
+		UE_LOG(LogTemp, Warning, TEXT("Presure plate missing triggerVolume from: %s"), *Owner->GetName());
+	}
 	//TODO get the chair actor
 	
 }
@@ -36,7 +38,6 @@ void UOpenDoor::OpenDoor()
 void UOpenDoor::CloseDoor()
 {
 	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f)); //yaw, pitch, roll f means floating point
-
 }
 
 // Called every frame
@@ -65,7 +66,9 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 float UOpenDoor::GetTotalMassOfActorsOnPlate() 
 {
 	float TotalMass = 0.f;
+
 	TArray<AActor*> OverlappingActors; //out parameter - array of actor pointers
+	if (!PressurePlate) { return TotalMass; }
 	PressurePlate->GetOverlappingActors(OUT OverlappingActors);
 	//find overlapping actors
 	for (const auto& Actor : OverlappingActors) 
