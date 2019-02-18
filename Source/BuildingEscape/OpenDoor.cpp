@@ -13,7 +13,6 @@ UOpenDoor::UOpenDoor()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 
-	// ...
 }
 
 
@@ -29,36 +28,21 @@ void UOpenDoor::BeginPlay()
 	
 }
 
-void UOpenDoor::OpenDoor()
-{
-	Owner->SetActorRotation(FRotator(0.f, OpenAngle, 0.f));
-	//UE_LOG(LogTemp, Warning, TEXT("The name of this object is: %s"), *ObjectName);
-}
-
-void UOpenDoor::CloseDoor()
-{
-	Owner->SetActorRotation(FRotator(0.f, 0.f, 0.f)); //yaw, pitch, roll f means floating point
-}
-
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	//TODO check for collision with chair
-	 //if collision call pick up the chair
-
 	//Poll trigger volume
 	//if the actor is on the volume
-	if (GetTotalMassOfActorsOnPlate() > 30.f) { //TODO need to make float a parameter for editing in game engine
+	if (GetTotalMassOfActorsOnPlate() > TriggerMass) { //TODO need to make float a parameter for editing in game engine
 		
-		OpenDoor();
-		LastDoorOpenTime = GetWorld()->GetRealTimeSeconds();
-	}
+		OnOpenRequest.Broadcast();
 
-	//check if it's time to close the door
-	if (GetWorld()->GetRealTimeSeconds() - LastDoorOpenTime > DoorCloseDelay) {
-		CloseDoor();
+	}
+	else {
+		//TODO put close do code here
+		OnCloseRequest.Broadcast();
 	}
 
 }
